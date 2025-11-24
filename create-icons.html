@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de Iconos para PWA</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    canvas {
+      border: 1px solid #ddd;
+      margin: 1rem 0;
+    }
+    button {
+      padding: 0.7rem 1.2rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      margin: 0.5rem;
+    }
+    .info {
+      background: #f3f4f6;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Generador de Iconos para PWA</h1>
+  <div class="info">
+    <p>Este generador crea iconos simples para tu PWA. Los iconos se descargarán automáticamente.</p>
+  </div>
+  
+  <canvas id="canvas192" width="192" height="192"></canvas>
+  <canvas id="canvas512" width="512" height="512"></canvas>
+  
+  <div>
+    <button onclick="generateIcons()">Generar y Descargar Iconos</button>
+  </div>
+
+  <script>
+    function generateIcons() {
+      // Función para dibujar icono en canvas
+      function drawIcon(canvas, size) {
+        const ctx = canvas.getContext('2d');
+        
+        // Fondo azul
+        ctx.fillStyle = '#2563eb';
+        ctx.fillRect(0, 0, size, size);
+        
+        // Círculo blanco para el icono de ubicación
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Punto central
+        ctx.fillStyle = '#2563eb';
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Sombra del círculo
+        ctx.strokeStyle = '#1e40af';
+        ctx.lineWidth = size * 0.02;
+        ctx.beginPath();
+        ctx.arc(size / 2, size / 2, size * 0.25, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      
+      // Dibujar iconos
+      const canvas192 = document.getElementById('canvas192');
+      const canvas512 = document.getElementById('canvas512');
+      
+      drawIcon(canvas192, 192);
+      drawIcon(canvas512, 512);
+      
+      // Descargar iconos
+      function downloadCanvas(canvas, filename) {
+        canvas.toBlob(function(blob) {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = filename;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        }, 'image/png');
+      }
+      
+      downloadCanvas(canvas192, 'icon-192.png');
+      setTimeout(() => {
+        downloadCanvas(canvas512, 'icon-512.png');
+        alert('¡Iconos generados y descargados! Colócalos en la carpeta raíz del proyecto.');
+      }, 500);
+    }
+    
+    // Generar automáticamente al cargar
+    window.addEventListener('load', () => {
+      setTimeout(generateIcons, 1000);
+    });
+  </script>
+</body>
+</html>
+
